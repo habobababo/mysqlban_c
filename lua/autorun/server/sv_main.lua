@@ -69,7 +69,7 @@ local function Core_AddBan( calling_ply, target_ply, minutes, reason )
 	--if calling_ply then nick = calling_ply:Nick() end
 	if !reason then reason = "" end
 	
-	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ('"..target_ply:SteamID64().."', '"..target_ply:Nick().."', "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
+	bansquery("INSERT INTO bans (steamid64, minutes, reason, admin, server ) VALUES ('"..target_ply:SteamID64().."', "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
 
 
 end
