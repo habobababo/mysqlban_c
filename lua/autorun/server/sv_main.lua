@@ -19,11 +19,11 @@ local function ConnectToDatabase()
 
 	bansdb = mysqloo.connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT)
 	
-	function database1:onConnected()
+	function bansdb:onConnected()
 		print("\n*** BANLIST DATABASE CONNECTED ***") 
 	end
 
-	function database1:onConnectionFailed( err )
+	function bansdb:onConnectionFailed( err )
 		print( "Connection to database failed!" )
 		print( "Error:", err )
 	end
