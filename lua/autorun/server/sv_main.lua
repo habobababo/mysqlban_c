@@ -81,7 +81,7 @@ function ULib.addBan( steamid, time, reason, name, admin ) --Replace ULIb
 	local players = player.GetAll()
 	for i=1, #players do
 		if players[ i ]:SteamID() == steamid then
-			ULib.kick( players[ i ], showReason, admin )
+			players[ i ]:Kick(showReason)
 			banned_ply = players[ i ]
 		end
 	end
