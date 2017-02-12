@@ -143,30 +143,30 @@ end
 if server == 3 then
 	local reason = "Karma too low"
 	function KARMA.CheckAutoKick(ply)
-	   if ply:GetBaseKarma() <= config.kicklevel:GetInt() then
-	      if hook.Call("TTTKarmaLow", GAMEMODE, ply) == false then
-		 return
-	      end
-	      ServerLog(ply:Nick() .. " autokicked/banned for low karma.\n")
+		if ply:GetBaseKarma() <= config.kicklevel:GetInt() then
+			if hook.Call("TTTKarmaLow", GAMEMODE, ply) == false then
+				return
+			end
+			ServerLog(ply:Nick() .. " autokicked/banned for low karma.\n")
 
-	      -- flag player as autokicked so we don't perform the normal player
-	      -- disconnect logic
-	      ply.karma_kicked = true
+			-- flag player as autokicked so we don't perform the normal player
+			-- disconnect logic
+			ply.karma_kicked = true
 
-	      if config.persist:GetBool() then
-		 local k = math.Clamp(config.starting:GetFloat() * 0.8, config.kicklevel:GetFloat() * 1.1, config.max:GetFloat())
-		 ply:SetPData("karma_stored", k)
-		 KARMA.RememberedPlayers[ply:SteamID()] = k
-	      end
-
-	      if config.autoban:GetBool() then
-		 ply:KickBan(config.bantime:GetInt(), reason)
-		Core_AddBan("CONSOLE", ply, config.bantime:GetInt(), reason )
-				
-	      else
-		 ply:Kick(reason)
-		Core_AddBan("CONSOLE", ply, 1, reason )
-	      end
-	   end
+			if config.persist:GetBool() then
+				local k = math.Clamp(config.starting:GetFloat() * 0.8, config.kicklevel:GetFloat() * 1.1, config.max:GetFloat())
+				ply:SetPData("karma_stored", k)
+				KARMA.RememberedPlayers[ply:SteamID()] = k
+			end
+			
+			if config.autoban:GetBool() then
+				ply:KickBan(config.bantime:GetInt(), reason)
+				Core_AddBan("CONSOLE", ply, config.bantime:GetInt(), reason )
+			else
+				ply:Kick(reason)
+				Core_AddBan("CONSOLE", ply, 1, reason )
+			end
+			
+		end
 	end
 end
