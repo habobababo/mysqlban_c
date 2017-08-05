@@ -68,7 +68,7 @@ local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
 	if !nick then nick = "" end
 	local steamid64 = util.SteamIDTo64(steamid)
 
-	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ('"..nick.."'', "..steamid64.."', "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
+	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ('"..nick.."', "..steamid64.."', "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
 end
 
 function ULib.addBan( steamid, time, reason, name, admin )
