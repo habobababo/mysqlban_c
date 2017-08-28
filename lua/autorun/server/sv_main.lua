@@ -64,11 +64,13 @@ end
 local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
 	if !minutes then return end
 	local time = tonumber(minutes)
+	local admin = ""
 	if !reason then reason = "" end
 	if !nick then nick = "" end
-	local steamid64 = util.SteamIDTo64(steamid)
-	print(nick..", "..steamid64..", "..minutes..", "..reason..", "..nick..", "..server)
-	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ('"..nick.."', "..steamid64.."', "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
+	if calling_ply then
+		admin = calling_ply
+	end
+	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ("..steamid..", '"..nick.."' , "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
 end
 
 local function Core_Banfunction( steamid, data )
@@ -77,6 +79,7 @@ end
 hook.Add("ULibPlayerBanned", "Core_Banfunction", Core_Banfunction)
 
 local function Core_Kickfunction( steamid, reason, caller )
+	if string.Left(reason, 3) == "---" then return end
 	local clr = ""
 	if caller then
 		clr = caller:Nick();
