@@ -84,6 +84,14 @@ local function Core_Kickfunction( steamid, reason, caller )
 	if caller then
 		clr = caller:Nick();
 	end
-	Core_AddBan( clr, util.SteamIDTo64(steamid), "", 1, reason)
+
+	local nick = ""
+	for k,v in pairs(player.GetAll()) do
+		if util.SteamIDTo64(steamid) == v:SteamID64() then
+			nick = v:Nick()
+		end
+	end
+
+	Core_AddBan( clr, util.SteamIDTo64(steamid), nick, 1, reason)
 end
 hook.Add("ULibPlayerKicked", "Core_Kickfunction", Core_Kickfunction)
