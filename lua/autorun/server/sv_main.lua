@@ -70,7 +70,7 @@ local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
 	if calling_ply then
 		admin = calling_ply
 	end
-	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ("..steamid..", '"..nick.."' , "..minutes..", '"..reason.."', '"..nick.."', "..server..") ")
+	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ("..steamid..", '"..nick.."' , "..minutes..", '"..reason.."', '"..admin.."', "..server..") ")
 end
 
 local function Core_Banfunction( steamid, data )
