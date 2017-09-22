@@ -61,6 +61,13 @@ local function bansquery(querystr, callback)
     Query:start()
 end
 
+local banned = {}
+
+local function Core_Init(ply)
+	banned[ply:SteamID64()] = false;	
+end
+hook.Add("PlayerInitalSpawn", "Core_Init", Core_Init)
+
 local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
 	if !minutes then return end
 	local time = tonumber(minutes)
@@ -75,16 +82,16 @@ end
 
 local function Core_Banfunction( steamid, data )
 	Core_AddBan( data.admin, util.SteamIDTo64(steamid), data.name, data.unban - data.time, data.reason )
+	banned[util.SteamIDTo64(steamid)] = true
 end
 hook.Add("ULibPlayerBanned", "Core_Banfunction", Core_Banfunction)
 
 local function Core_Kickfunction( steamid, reason, caller )
-	if string.Left(reason, 3) == "---" then return end
+	if banned[util.SteamIDTo64(steamid)] then return end
 	local clr = ""
 	if caller then
 		clr = caller:Nick();
 	end
-
 	local nick = ""
 	for k,v in pairs(player.GetAll()) do
 		if util.SteamIDTo64(steamid) == v:SteamID64() then
