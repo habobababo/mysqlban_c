@@ -5,6 +5,8 @@ local server = 1 --[[
 	3 = TTT
 	4 = DarkRP
 	5 = Jailbreak
+	6 = Cinema
+	7 = Pedobear
 ]]--
 
 require( "mysqloo" )
