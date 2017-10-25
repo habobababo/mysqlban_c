@@ -72,7 +72,7 @@ hook.Add("PlayerInitalSpawn", "Core_Init", Core_Init)
 
 local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
 	if !minutes then return end
-	local time = tonumber(minutes)
+	if minutes < 0 then minutes = 0 end
 	local admin = ""
 	if !reason then reason = "" end
 	if !nick then nick = "" end
