@@ -63,44 +63,45 @@ local function bansquery(querystr, callback)
     Query:start()
 end
 
-local banned = {}
-
-local function Core_Init(ply)
-	banned[ply:SteamID64()] = false;	
-end
-hook.Add("PlayerInitalSpawn", "Core_Init", Core_Init)
-
-local function Core_AddBan( calling_ply, steamid, nick, minutes, reason )
+local function Core_AddBan( calling_ply, calling_plyid, steamid, nick, minutes, reason )
 	if !minutes then return end
 	if minutes < 0 then minutes = 0 end
-	local admin = ""
 	if !reason then reason = "" end
 	if !nick then nick = "" end
-	if calling_ply then
-		admin = calling_ply
-	end
-	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, server ) VALUES ("..steamid..", '"..nick.."' , "..minutes..", '"..reason.."', '"..admin.."', "..server..") ")
+	bansquery("INSERT INTO bans (steamid64, name, minutes, reason, admin, adminid, server ) VALUES ("..steamid..", '"..nick.."' , "..minutes..", '"..reason.."', '"..calling_ply.."', "..calling_plyid..", "..server..") ")
 end
 
 local function Core_Banfunction( steamid, data )
-	Core_AddBan( data.admin, util.SteamIDTo64(steamid), data.name, data.unban - data.time, data.reason )
-	banned[util.SteamIDTo64(steamid)] = true
+	local adminid = 0;
+	local steamid32 = string.match( data.admin, "%(([^%)]+)%)" )
+	local nick = data.admin or "CORE"
+	if steamid32 then
+		adminid = util.SteamIDTo64(steamid32)
+		for k,v in pairs(player.GetAll()) do
+			if adminid == v:SteamID64() then
+				nick = v:Nick()
+			end
+		end
+	end
+	local steamid64 = util.SteamIDTo64(steamid)
+	Core_AddBan( nick, adminid, steamid64, data.name, data.unban - data.time, data.reason )
 end
 hook.Add("ULibPlayerBanned", "Core_Banfunction", Core_Banfunction)
 
 local function Core_Kickfunction( steamid, reason, caller )
-	if banned[util.SteamIDTo64(steamid)] then return end
-	local clr = ""
-	if caller then
-		clr = caller:Nick();
-	end
-	local nick = ""
+	local nick = "CORE"
 	for k,v in pairs(player.GetAll()) do
 		if util.SteamIDTo64(steamid) == v:SteamID64() then
 			nick = v:Nick()
 		end
 	end
+	local callerid = 0
+	local callernick = ""
+	if caller then
+		callerid = caller:SteamID64()
+		callernick = caller:Nick()
+	end
 
-	Core_AddBan( clr, util.SteamIDTo64(steamid), nick, 1, reason)
+	Core_AddBan( callernick, callerid, util.SteamIDTo64(steamid), nick, 1, reason)
 end
 hook.Add("ULibPlayerKicked", "Core_Kickfunction", Core_Kickfunction)
