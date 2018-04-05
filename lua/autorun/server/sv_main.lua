@@ -73,7 +73,9 @@ end
 
 local function Core_Banfunction( steamid, data )
 	local adminid = 0;
-	local steamid32 = string.match( data.admin, "%(([^%)]+)%)" )
+	if data.admin then 
+		local steamid32 = string.match( data.admin, "%(([^%)]+)%)" )
+	end
 	local nick = data.admin or "CORE"
 	if steamid32 then
 		adminid = util.SteamIDTo64(steamid32)
